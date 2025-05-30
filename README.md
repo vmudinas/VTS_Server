@@ -8,6 +8,7 @@ VTS Server is a backend API service extracted from the VTS_CRM project, providin
 - .NET 9.0 SDK or later
 - For SQLite: No additional setup needed (default)
 - For SQL Server: SQL Server instance and credentials
+- For Docker deployment: Docker and Docker Compose
 
 ### Environment Variables
 You can configure the server using the following environment variables:
@@ -33,6 +34,8 @@ BITCOIN_SEED_PHRASE=your_seed_phrase # Required for Bitcoin payment processing
 
 ### Running the Server
 
+#### Option 1: Run Locally
+
 1. Clone the repository
 ```
 git clone https://github.com/vmudinas/VTS_Server.git
@@ -47,6 +50,39 @@ dotnet restore
 3. Run the server
 ```
 dotnet run
+```
+
+#### Option 2: Run with Docker
+
+1. Clone the repository
+```
+git clone https://github.com/vmudinas/VTS_Server.git
+cd VTS_Server
+```
+
+2. For production environment:
+```
+docker-compose up -d
+```
+
+3. For development environment:
+```
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+#### Configuration Options for Docker
+
+You can customize your Docker deployment by:
+
+1. Creating a `.env` file (based on `docker/config/sample.env`)
+```
+cp docker/config/sample.env .env
+# Edit .env with your values
+```
+
+2. Then run Docker Compose:
+```
+docker-compose --env-file .env up -d
 ```
 
 The server will be available at:
