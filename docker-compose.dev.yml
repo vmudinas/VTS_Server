@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DB_SERVER=db
+      - DB_PORT=1433
+      - DB_NAME=FAI
+      - DB_USER=sa
+      - DB_PASSWORD=YourStrong@Passw0rd
+      - JWT_SECRET=development_jwt_secret_key_replace_in_production
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASSWORD=letmein123
+      - BITCOIN_SEED_PHRASE=your_development_seed_phrase
+    depends_on:
+      - db
+    volumes:
+      - ./server:/src:ro
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - vts-network
+
+  db:
+    build:
+      context: ./docker/sql
+      dockerfile: Dockerfile.sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    restart: unless-stopped
+    networks:
+      - vts-network
+
+volumes:
+  sqldata:
+
+networks:
+  vts-network:
+    driver: bridge
